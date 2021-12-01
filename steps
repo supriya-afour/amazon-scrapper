@@ -1,0 +1,47 @@
+Go to https://www.amazon.com/
+
+Search for any product-ex laptop
+
+Apply filter from brand section and customer rating top one
+
+Budget: min 100 to max 200 
+
+Sort by price low to high
+
+Click on first product for more details
+
+Get product title, price, 
+
+Series	Samsung Chromebook
+Brand	Samsung Electronics
+Specific Uses For Product	Personal, business
+Screen Size	11.6 Inches
+Operating System	Chrome OS
+Human Interface Input	Touch Pad
+CPU Manufacturer	Intel
+Color	Black
+Connectivity Technology	Wireless
+Hard Disk Size	16 GB
+
+Click on add to cart
+
+Click on proceed to checkout
+
+
+.....................
+
+aaply validations 
+  action -> if elemnt not found
+  if product brand not available throw error
+
+
+.....................
+
+
+Driver -> index.ts -> 
+operation.ts
+Actions
+	-> search.ts
+	-> filter.ts
+	-> schedule.ts -> clicks product and scrap required details 
+	-> checkout.ts -> add to cart and proceed to checkout
