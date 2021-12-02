@@ -17,7 +17,7 @@ const SORT_DROPDOWN_SELECTOR: string = "i.a-icon-dropdown"
 const SORT_WAIT_SELECTOR: string = ".a-popover.a-dropdown.a-dropdown-common.a-declarative"
 const SORT_LOW_TO_HIGH_SELECTOR: string = ".a-popover.a-dropdown.a-dropdown-common.a-declarative .a-popover-wrapper .a-popover-inner ul[role='listbox'] li a#s-result-sort-select_2"
 
-export default class searchAction {
+export default class Search {
   private BROWSER_LINK: string = 'https://www.amazon.com/'
 
   private delay: number = 3000;
@@ -27,7 +27,7 @@ export default class searchAction {
   constructor(private readonly page: Page) { }
 
   public static init(page: Page){
-    return new searchAction(page)
+    return new Search(page)
   }
 
   public async findSearchBar() {

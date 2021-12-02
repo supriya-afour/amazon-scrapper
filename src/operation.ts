@@ -1,5 +1,5 @@
 import Browser from './actions/Browser';
-import searchAction from './actions/search';
+import Search from './actions/search';
 import Product from './actions/product';
 import Checkout from './actions/checkout';
 
@@ -20,7 +20,7 @@ export default class Operation {
 
         // Create object of searchaction
 
-        const searchActionObj = searchAction.init(page);
+        const searchActionObj = Search.init(page);
 
         // // Search search bar
         await searchActionObj.findSearchBar()
