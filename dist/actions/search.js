@@ -24,37 +24,63 @@ const PRICE_SUBMIT_SELECTOR = "#priceRefinements ul[aria-labelledby='p_36-title'
 const SORT_DROPDOWN_CONTAINER_SELECTOR = ".a-dropdown-container";
 const SORT_DROPDOWN_SELECTOR = "i.a-icon-dropdown";
 const SORT_WAIT_SELECTOR = ".a-popover.a-dropdown.a-dropdown-common.a-declarative";
-const SORT_LOW_TO_HIGH_SELECTOR = ".a-popover.a-dropdown.a-dropdown-common.a-declarative .a-popover-wrapper .a-popover-inner ul[role='listbox'] li a#s-result-sort-select_1";
+const SORT_LOW_TO_HIGH_SELECTOR = ".a-popover.a-dropdown.a-dropdown-common.a-declarative .a-popover-wrapper .a-popover-inner ul[role='listbox'] li a#s-result-sort-select_2";
 class searchAction {
     constructor(page) {
         this.page = page;
+        this.BROWSER_LINK = 'https://www.amazon.com/';
         this.delay = 3000;
+        this.typeDelay = 100;
         this.minPrice = "100";
         this.maxPrice = "200";
+    }
+    static init(page) {
+        return new searchAction(page);
     }
     findSearchBar() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.page.type(SEARCH_SELECTOR, LAPTOP_TEXT);
+                yield this.page.goto(this.BROWSER_LINK);
+                yield this.page.type(SEARCH_SELECTOR, LAPTOP_TEXT, { delay: this.typeDelay });
+            }
+            catch (error) {
+                throw `Expected selector ${SEARCH_SELECTOR} didn't appear after ${this.delay}ms.`;
+            }
+            try {
                 yield this.page.click(SUBMIT_SELECTOR);
-                yield this.page.waitForNavigation();
             }
-            catch (err) {
-                console.log(err);
+            catch (error) {
+                throw `Expected selector ${SUBMIT_SELECTOR} didn't appear after ${this.delay}ms.`;
             }
+            yield this.page.waitForNavigation();
         });
     }
     // brand filter
     applyBrandFilterData() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.page.waitForSelector(BRAND_WAIT_SELECTOR);
+                yield this.page.waitForSelector(BRAND_WAIT_SELECTOR, { timeout: this.delay });
+            }
+            catch (error) {
+                throw `Expected selector ${BRAND_WAIT_SELECTOR} didn't appear after ${this.delay}ms.`;
+            }
+            try {
                 yield this.page.click(HP_SELECTOR, { delay: this.delay });
-                yield this.page.waitForSelector(BRAND_WAIT_SELECTOR);
+            }
+            catch (error) {
+                throw `Expected selector ${HP_SELECTOR} didn't appear after ${this.delay}ms.`;
+            }
+            try {
+                yield this.page.waitForSelector(BRAND_WAIT_SELECTOR, { timeout: this.delay });
+            }
+            catch (error) {
+                throw `Expected selector ${BRAND_WAIT_SELECTOR} didn't appear after ${this.delay}ms.`;
+            }
+            try {
                 yield this.page.click(SAMSUNG_SELECTOR, { delay: this.delay });
             }
-            catch (err) {
-                console.log(err);
+            catch (error) {
+                throw `Expected selector ${SAMSUNG_SELECTOR} didn't appear after ${this.delay}ms.`;
             }
         });
     }
@@ -62,11 +88,16 @@ class searchAction {
     applyReviewsFilterData() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.page.waitForSelector(REVIEW_BRAND_SELECTOR);
+                yield this.page.waitForSelector(REVIEW_BRAND_SELECTOR, { timeout: this.delay });
+            }
+            catch (error) {
+                throw `Expected selector ${REVIEW_BRAND_SELECTOR} didn't appear after ${this.delay}ms.`;
+            }
+            try {
                 yield this.page.click(REVIEW_SELECTOR, { delay: this.delay });
             }
             catch (err) {
-                console.log(err);
+                throw `Expected selector ${REVIEW_SELECTOR} didn't appear after ${this.delay}ms.`;
             }
         });
     }
@@ -75,12 +106,27 @@ class searchAction {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.page.waitForSelector(PRICE_BRAND_SELECTOR);
-                yield this.page.type(MIN_PRICE_SELECTOR, this.minPrice, { delay: 100 });
-                yield this.page.type(MAX_PRICE_SELECTOR, this.maxPrice, { delay: 100 });
-                yield this.page.click(PRICE_SUBMIT_SELECTOR, { delay: this.delay });
             }
             catch (err) {
-                console.log(err);
+                throw `Expected selector ${PRICE_BRAND_SELECTOR} didn't appear after ${this.delay}ms.`;
+            }
+            try {
+                yield this.page.type(MIN_PRICE_SELECTOR, this.minPrice, { delay: this.typeDelay });
+            }
+            catch (error) {
+                throw `Expected selector ${MIN_PRICE_SELECTOR} didn't appear after ${this.delay}ms.`;
+            }
+            try {
+                yield this.page.type(MAX_PRICE_SELECTOR, this.maxPrice, { delay: this.typeDelay });
+            }
+            catch (error) {
+                throw `Expected selector ${MAX_PRICE_SELECTOR} didn't appear after ${this.delay}ms.`;
+            }
+            try {
+                yield this.page.click(PRICE_SUBMIT_SELECTOR, { delay: this.delay });
+            }
+            catch (error) {
+                throw `Expected selector ${MAX_PRICE_SELECTOR} didn't appear after ${this.delay}ms.`;
             }
         });
     }
@@ -94,7 +140,7 @@ class searchAction {
                 yield this.page.click(SORT_LOW_TO_HIGH_SELECTOR, { delay: this.delay });
             }
             catch (err) {
-                console.log(err);
+                throw `Expected selector ${SEARCH_SELECTOR} didn't appear after ${this.delay}ms.`;
             }
         });
     }

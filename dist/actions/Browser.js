@@ -21,16 +21,16 @@ class Browser {
                 return browser;
             }
             catch (err) {
+                console.log(err);
                 throw "Error while launching puppeteer";
             }
         });
     }
-    launchBrowser(browser, browser_link) {
+    launchBrowser(browser) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const page = yield browser.newPage();
                 yield page.setViewport({ width: 1366, height: 768 });
-                yield page.goto(browser_link);
                 return page;
             }
             catch (err) {

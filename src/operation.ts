@@ -4,7 +4,7 @@ import Product from './actions/product';
 import Checkout from './actions/checkout';
 
 export default class Operation {
-  private BROWSER_LINK: string = 'https://www.amazon.com/'
+  
 
   public visitAmazon()  {
     (async () => {
@@ -16,10 +16,11 @@ export default class Operation {
         const browser = await browserObj.launchPuppeteer();
 
         // launch browser
-        const page = await browserObj.launchBrowser(browser, this.BROWSER_LINK);
+        const page = await browserObj.launchBrowser(browser);
 
         // Create object of searchaction
-        const searchActionObj = new searchAction(page);
+
+        const searchActionObj = searchAction.init(page);
 
         // // Search search bar
         await searchActionObj.findSearchBar()
@@ -37,7 +38,7 @@ export default class Operation {
         await searchActionObj.applySortFilterData();
 
         // create object of productaction
-        const product = new Product(page);
+        const product = Product.init(page);
 
         // pickup first product from the above filter
         await product.getProduct();
@@ -46,7 +47,7 @@ export default class Operation {
         await product.scrapProductDetails();
 
         // create object of checkoutaction
-        const checkout = new Checkout(page);
+        const checkout = Checkout.init(page);
 
         // // click on addtocart button
         await checkout.addToCart();

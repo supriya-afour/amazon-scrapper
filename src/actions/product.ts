@@ -16,14 +16,14 @@ interface ProductInterface {
 }
 // As specified by puppeteer docs.
 const PUPPETEER_DEFAULT_TIMEOUT_MS = 30000;
-const TOP_WAIT_PRODUCT_SELECTOR: string = ".s-include-content-margin.s-latency-cf-section.s-border-bottom.s-border-top:first-child"
-const TOP_PRODUCT_SELECTOR: string = ".s-include-content-margin.s-latency-cf-section.s-border-bottom.s-border-top:first-child .a-section > .sg-row:nth-child(2) > div:nth-child(2) h2.a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2 a";
+const TOP_WAIT_PRODUCT_SELECTOR: string = "div[data-cel-widget='search_result_1']"
+const TOP_PRODUCT_SELECTOR: string = "div[data-cel-widget='search_result_1'] h2.a-size-mini.a-spacing-none.a-color-base.s-line-clamp-2 a";
 const PRODUCT_DETAILS_HEADERS_SELECTOR = '#poExpander table tr td.a-span3 span.a-size-base';
-const PRODUCT_DETAILS_RESULTS_SELECTOR = '#poExpander table tr td.a-span9';
+const PRODUCT_DETAILS_RESULTS_SELECTOR = '#poExpander table tr td.a-span9 span.a-size-base';
 const PRODUCT_NAME_WAIT_SELECTOR: string = "#ppd #centerCol #titleSection";
 const PRODUCT_NAME_SELECTOR: string = '#ppd #centerCol #titleSection #productTitle'
 const PRODUCT_PRICE_SELECTOR: string = '#corePrice_desktop table .a-offscreen';
-const PRODUCT_CLICK_MORE_WAIT_SELECTOR: string = "#productOverview_feature_div";
+const PRODUCT_CLICK_MORE_WAIT_SELECTOR: string = "#poToggleButton";
 const PRODUCT_CLICK_MORE_SELECTOR: string = "#poToggleButton a";
 const EXPECTED_PRODUCT_DETAILS_HEADERS = [
   'Series',
@@ -42,21 +42,25 @@ export default class Product {
   private delay: number = 3000;
   constructor(private readonly page: Page) { }
 
+  public static init(page: Page){
+    return new Product(page)
+  }
+
   // get first product from the filtered data.
   public async getProduct() {
     try {
-      await this.page.waitForSelector(TOP_WAIT_PRODUCT_SELECTOR);
+      await this.page.waitForSelector(TOP_PRODUCT_SELECTOR);
       await this.page.click(TOP_PRODUCT_SELECTOR, { delay: this.delay });
     } catch (err) {
-      throw err;
+      throw `Expected selector ${TOP_WAIT_PRODUCT_SELECTOR} didn't appear after ${this.delay}ms.`
     }
   }
 
-  public async scrapProductDetails() {
+  public async scrapProductDetails(): Promise<ProductInterface> {
     // scrap product name
     await this.page.waitForSelector(PRODUCT_NAME_WAIT_SELECTOR);
     const productTitle = await this.page.$(PRODUCT_NAME_SELECTOR);
-    const productName = await this.page.evaluate(el => el.textContent.replace(/\n/g, ''), productTitle);
+    const productName = await this.page.evaluate(el => el.textContent.trim(), productTitle);
 
     // scrap product price
     const productPrice = await this.page.$(PRODUCT_PRICE_SELECTOR);
@@ -64,6 +68,7 @@ export default class Product {
 
     // click on see more button
     await this.page.waitForSelector(PRODUCT_CLICK_MORE_WAIT_SELECTOR);
+    console.log("PRODUCT_CLICK_MORE_WAIT_SELECTOR", PRODUCT_CLICK_MORE_WAIT_SELECTOR);
     await this.page.click(PRODUCT_CLICK_MORE_SELECTOR, { delay: this.delay });
 
     // scrap product table details
@@ -72,15 +77,14 @@ export default class Product {
     //   EXPECTED_PRODUCT_DETAILS_HEADERS,
     // );
 
-    // console.log(headerValues);
-    const productDetails: ProductInterface[] = [];
+    ;
     // const poRows = await this.page.$$(PRODUCT_DETAILS_RESULTS_SELECTOR);
 
     const rowValues: string[] = await this.page.$$eval(PRODUCT_DETAILS_RESULTS_SELECTOR, elements =>
       elements.map(e => e.textContent?.replace(/\n/g, '') || ''),
     );
 
-    productDetails.push({
+    const productDetails: ProductInterface = {
       name: productName,
       price: price,
       series: rowValues[EXPECTED_PRODUCT_DETAILS_HEADERS.indexOf('Series')],
@@ -93,7 +97,7 @@ export default class Product {
       card_description: rowValues[EXPECTED_PRODUCT_DETAILS_HEADERS.indexOf('Card Description')],
       color: rowValues[EXPECTED_PRODUCT_DETAILS_HEADERS.indexOf('Color')],
       connectivity_technology: rowValues[EXPECTED_PRODUCT_DETAILS_HEADERS.indexOf('Connectivity Technology')],
-    });
+    }
     console.log(productDetails);
     return productDetails;
   }

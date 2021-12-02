@@ -28,8 +28,12 @@ class ScrapperApp {
             app.get('/', (req, res) => {
                 res.send('Hello from Amazon scrapper');
             });
-            // app.use("/", amazonRouter.getRouter());
-            operation.visitAmazon();
+            try {
+                operation.visitAmazon();
+            }
+            catch (err) {
+                throw err;
+            }
             return app.listen(PORT, () => {
                 console.log(`Server running on PORT number ${PORT}`);
             });

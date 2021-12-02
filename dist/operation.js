@@ -17,10 +17,6 @@ const search_1 = __importDefault(require("./actions/search"));
 const product_1 = __importDefault(require("./actions/product"));
 const checkout_1 = __importDefault(require("./actions/checkout"));
 class Operation {
-    constructor() {
-        this.BROWSER_LINK = 'https://www.amazon.com/';
-    }
-    // private BROWSER_LINK: string = 'https://www.amazon.com/Samsung-Chromebook-XE500C13-K01US-16GB-Laptop/dp/B01APA6K6M/ref=sr_1_1?keywords=laptop&qid=1638179735&refinements=p_89%3AHP%7CSamsung+Electronics%2Cp_72%3A1248879011%2Cp_36%3A1253506011&rnid=386442011&s=electronics&sr=1-1'
     visitAmazon() {
         (() => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -29,9 +25,9 @@ class Operation {
                 // launch Puppeteer.
                 const browser = yield browserObj.launchPuppeteer();
                 // launch browser
-                const page = yield browserObj.launchBrowser(browser, this.BROWSER_LINK);
+                const page = yield browserObj.launchBrowser(browser);
                 // Create object of searchaction
-                const searchActionObj = new search_1.default(page);
+                const searchActionObj = search_1.default.init(page);
                 // // Search search bar
                 yield searchActionObj.findSearchBar();
                 // // apply brand filter
@@ -43,13 +39,13 @@ class Operation {
                 // // apply sort filter
                 yield searchActionObj.applySortFilterData();
                 // create object of productaction
-                const product = new product_1.default(page);
+                const product = product_1.default.init(page);
                 // pickup first product from the above filter
                 yield product.getProduct();
                 //scrap all details of selected product
                 yield product.scrapProductDetails();
                 // create object of checkoutaction
-                const checkout = new checkout_1.default(page);
+                const checkout = checkout_1.default.init(page);
                 // // click on addtocart button
                 yield checkout.addToCart();
                 // // click on checkout button
